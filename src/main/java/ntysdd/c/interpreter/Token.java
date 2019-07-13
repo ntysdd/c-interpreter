@@ -1,8 +1,18 @@
 package ntysdd.c.interpreter;
 
-import lombok.Value;
+public interface Token {
+    TokenType getTokenType();
+    String getSourceCode();
 
-@Value
-public final class Token {
-    private final String string;
+    static Token EOF = new Token() {
+        @Override
+        public TokenType getTokenType() {
+            return TokenType.EOF;
+        }
+
+        @Override
+        public String getSourceCode() {
+            return "";
+        }
+    };
 }
