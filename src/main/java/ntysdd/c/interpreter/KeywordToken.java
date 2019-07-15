@@ -1,8 +1,9 @@
 package ntysdd.c.interpreter;
 
 import java.util.Locale;
+import java.util.Optional;
 
-public enum KeywordEnum {
+public enum KeywordToken implements Token {
     AUTO,
     BREAK,
     CASE,
@@ -59,5 +60,24 @@ public enum KeywordEnum {
         } else {
             return text.toLowerCase(Locale.ENGLISH);
         }
+    }
+
+    @Override
+    public String getSourceCode() {
+        return this.toString();
+    }
+
+    @Override
+    public TokenType getTokenType() {
+        return TokenType.KEYWORD;
+    }
+
+    public static Optional<KeywordToken> tryGetKeyword(String str) {
+        for (KeywordToken e : KeywordToken.values()) {
+            if (str.equals(e.toString())) {
+                return Optional.of(e);
+            }
+        }
+        return Optional.empty();
     }
 }

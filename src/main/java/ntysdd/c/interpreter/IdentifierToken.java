@@ -1,9 +1,11 @@
 package ntysdd.c.interpreter;
 
 import lombok.AllArgsConstructor;
+import lombok.ToString;
 
+@ToString
 @AllArgsConstructor
-public final class CommentToken implements Token {
+public final class IdentifierToken implements Token {
     private final String sourceCode;
 
     @Override
@@ -13,6 +15,6 @@ public final class CommentToken implements Token {
 
     @Override
     public TokenType getTokenType() {
-        return TokenType.COMMENT;
+        return TokenType.IDENTIFIER;
     }
 }

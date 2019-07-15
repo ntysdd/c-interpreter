@@ -1,6 +1,7 @@
 package ntysdd.c.interpreter;
 
 public enum TokenType {
+    KEYWORD,
     HASH,
     DOUBLE_HASH,
     LEFT_ANGLE,
@@ -27,6 +28,7 @@ public enum TokenType {
     DOUBLE_PLUS,
     DOUBLE_MINUS,
     COMMENT,
+    IDENTIFIER,
     STRING_LITERAL,
     CHAR_LITERAL,
     NUM_LITERAL,

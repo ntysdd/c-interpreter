@@ -6,11 +6,15 @@ import java.io.EOFException;
 import java.io.BufferedInputStream;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.Optional;
+import static ntysdd.c.interpreter.Utils.*;
 
 import lombok.SneakyThrows;
+import lombok.Getter;
 
 public final class Lexer extends Thread {
     private final InputStream is;
+    @Getter
     private final BlockingQueue<Token> output;
 
     public Lexer(InputStream is) {
@@ -41,6 +45,10 @@ public final class Lexer extends Thread {
         while (true) {
             ch = getChar();
             switch (ch) {
+            case ' ':
+            case '\t':
+            case '\n':
+                break;
             case '#':
                 if (peekChar() == '#') {
                     getChar();
@@ -171,7 +179,36 @@ public final class Lexer extends Thread {
                 emit(OpToken.EOF);
                 break;
             default:
-                throw new RuntimeException();
+                assert 0 <= ch && ch <= 0xffff;
+                if (ch == '_' || isAsciiAlphabet((char) ch)) {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append((char) ch);
+                    while (true) {
+                        int c = peekChar();
+                        assert -1 <= c && c <= 0xffff;
+                        if (c == -1) {
+                            break;
+                        }
+                        if (c == '_'
+                                || isAsciiAlphabet((char) c)
+                                || isAsciiNumber((char) c)) {
+                            getChar();
+                            sb.append((char) c);
+                        } else {
+                            break;
+                        }
+                    }
+                    String str = sb.toString();
+                    Optional<KeywordToken> optionalKeyword =
+                        KeywordToken.tryGetKeyword(str);
+                    if (optionalKeyword.isPresent()) {
+                        emit(optionalKeyword.get());
+                    } else {
+                        emit(new IdentifierToken(sb.toString()));
+                    }
+                } else {
+                    throw new RuntimeException();
+                }
             }
         }
     }

@@ -4,15 +4,5 @@ public interface Token {
     TokenType getTokenType();
     String getSourceCode();
 
-    static Token EOF = new Token() {
-        @Override
-        public TokenType getTokenType() {
-            return TokenType.EOF;
-        }
-
-        @Override
-        public String getSourceCode() {
-            return "";
-        }
-    };
+    static Token EOF = EOFToken.EOF;
 }
